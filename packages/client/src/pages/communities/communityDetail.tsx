@@ -3,7 +3,6 @@ import type { FC } from "react";
 import { Suspense, useCallback, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useParams } from "react-router-dom";
-import { dummyCommunity } from "../../../testdata/community";
 import { BaseLayout } from "../../features/app/components/BaseLayout";
 import { Button } from "../../features/app/components/Button";
 import { Heading } from "../../features/app/components/Heading";
@@ -21,6 +20,7 @@ import {
 } from "../../features/communityEvent/modules/communityEventsHooks";
 import { useCreateCommunityEvent } from "../../features/communityEvent/modules/createCommunityEventHooks";
 import { css, theme } from "../../lib/style";
+import { useGetCommnity } from "../../features/community/modules/communityHooks";
 
 export const CommunityDetailPage: FC = () => {
   return (
@@ -42,11 +42,6 @@ export const CommunityDetailPage: FC = () => {
   );
 };
 
-// API から取得
-const data = {
-  community: dummyCommunity(),
-};
-
 const CommunityDetailPageContent: FC = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const { id } = useParams();
@@ -56,6 +51,7 @@ const CommunityDetailPageContent: FC = () => {
     communityId: id ?? "",
     requestSize: 5,
   });
+  const { data } = useGetCommnity({ communityId: id ?? "" });
 
   const thumbnailUrl = useMemo(() => {
     if (typeof data?.community.imageUrl === "undefined") {
