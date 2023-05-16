@@ -81,7 +81,13 @@ const CommunityDetailPageContent: FC = () => {
         return;
       }
 
-      alert("TODO: イベント作成処理実装");
+      await createCommunityEvent({
+        communityId: id,
+        name,
+        holdAt,
+        details,
+        category,
+      });
 
       await fetchListCommunityEvent();
 
