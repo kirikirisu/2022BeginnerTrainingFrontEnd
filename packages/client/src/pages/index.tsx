@@ -43,12 +43,13 @@ export const Home: FC = () => {
 };
 
 const PageContent: FC = () => {
+  const [keyword, setKeyword] = useState("");
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [theme] = useTheme();
   const { createCommunity } = useCreateCommunity();
   const fetchListCommunity = useFetchListCommunity({
     requestSize: 5,
-    keyword: "" /* TODO: 検索キーワードを入れる */,
+    keyword: keyword,
   });
 
   const requestCreateCommunity = useCallback(
@@ -112,9 +113,8 @@ const PageContent: FC = () => {
         </div>
 
         <div className={searchWrapper()}>
-          {/* TODO: 検索キーワードを取得 */}
           <SearchCommunityForm
-            onClickSearch={(keyword) => console.log(keyword)}
+            onClickSearch={(keyword) => setKeyword(keyword)}
             breakpoint={{
               size: {
                 lg: "default",
@@ -125,7 +125,7 @@ const PageContent: FC = () => {
           />
         </div>
         <Suspense fallback={<CommunitiListSkeleton />}>
-          <CommunityList keyword={""} /> {/* TODO: 検索キーワードを入れる */}
+          <CommunityList keyword={keyword} />
         </Suspense>
       </div>
       <CreateCommunityFormModal

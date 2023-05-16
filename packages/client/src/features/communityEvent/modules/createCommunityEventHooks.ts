@@ -1,5 +1,6 @@
 import { ApiError, CommunityEvent } from "api-server";
 import { useCallback, useState } from "react";
+import { apiClient, handleApiError } from "../../../lib/api";
 
 type CreateCommunityEventState =
   | {
@@ -41,7 +42,18 @@ export const useCreateCommunityEvent = () => {
       holdAt: Date;
       category: CommunityEvent["category"];
     }) => {
-      return Promise.resolve(); // TODO: API 通信処理実装
+      const result = await apiClient.communityEvent
+        .createCommunityEvent({
+          communityId,
+          requestBody: {
+            name,
+            details,
+            holdAt: holdAt.getTime(),
+            category,
+          },
+        })
+        .catch(handleApiError);
+      return result;
     },
     []
   );
