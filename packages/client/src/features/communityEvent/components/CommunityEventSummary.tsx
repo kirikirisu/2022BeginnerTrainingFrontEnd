@@ -7,7 +7,10 @@ import { css, theme } from "../../../lib/style";
 import { Heading } from "../../app/components/Heading";
 import { Image } from "../../app/components/Image";
 import { CommunityEventCommentForm } from "../../communityEventComments/components/CommunityEventCommentForm";
-import { useFetchListCommunityEventComment } from "../../communityEventComments/modules/listCommunityEventCommentHooks";
+import {
+  useFetchListCommunityEventComment,
+  useListCommunityEventComment,
+} from "../../communityEventComments/modules/listCommunityEventCommentHooks";
 import { usePostCommunityEventComment } from "../../communityEventComments/modules/postCommunityEventCommentHooks";
 
 const TRANSITION_TIMEOUT = 300;
@@ -32,6 +35,10 @@ export const CommunityEventSummary: FC<CommunityEventSummaryProps> = ({
     });
   }, [communityEvent.holdAt]);
   const toggleRef = useRef<HTMLDivElement>(null);
+  const { data } = useListCommunityEventComment({
+    communityId,
+    eventId: communityEvent.id,
+  });
 
   const requestPostComment = useCallback(
     async (body: string) => {
@@ -57,6 +64,8 @@ export const CommunityEventSummary: FC<CommunityEventSummaryProps> = ({
       postCommunityEventComment,
     ]
   );
+
+  if (!data) return null;
 
   return (
     <article className={containerStyle()}>
@@ -112,7 +121,13 @@ export const CommunityEventSummary: FC<CommunityEventSummaryProps> = ({
               ref={toggleRef}
             >
               <CommunityEventCommentForm onSubmit={requestPostComment} />
-              {isOpenToggle && <div>TODO: コメント表示</div>}
+              {isOpenToggle && (
+                <ul>
+                  {data.map(({ comment }) => (
+                    <li key={comment.id}>{comment.body}</li>
+                  ))}
+                </ul>
+              )}
             </div>
           </CSSTransition>
         </details>

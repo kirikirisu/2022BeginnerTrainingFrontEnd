@@ -269,10 +269,12 @@ const ListCommunityEvent: FC<{ communityId: string }> = ({ communityId }) => {
       <ul className={listStyle()}>
         {events.map(({ communityEvent }) => (
           <li className={listItem()} key={communityEvent.id}>
-            <CommunityEventSummary
-              communityEvent={communityEvent}
-              communityId={communityId}
-            />
+            <Suspense fallback={<div>Now Loading...</div>}>
+              <CommunityEventSummary
+                communityEvent={communityEvent}
+                communityId={communityId}
+              />
+            </Suspense>
           </li>
         ))}
       </ul>
